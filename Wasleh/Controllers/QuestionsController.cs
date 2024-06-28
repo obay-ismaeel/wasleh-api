@@ -75,6 +75,7 @@ public class QuestionsController : BaseController
 
         question.Body = questionDto.Body;
         question.Title = questionDto.Title;
+        question.UpdatedAt = DateTime.UtcNow;
 
         _unitOfWork.Questions.Update(question);
         await _unitOfWork.CompleteAsync();
@@ -94,5 +95,58 @@ public class QuestionsController : BaseController
         await _unitOfWork.CompleteAsync();
 
         return NoContent();
+    }
+
+    [HttpGet("{id}/answers")]
+    public async Task<IActionResult> GetQuestionAnswers(int id)
+    {
+        var question = await _unitOfWork.Questions.FindAsync(x => x.Id == id, ["Answers"]);
+
+        if (question is null)
+            return NotFound();
+        
+        var result = new Result<List<ResponseAnswerDto>> 
+        { 
+            Content = question.Answers.Select(x => _mapper.Map<ResponseAnswerDto>(x)).ToList(),
+            ResponseTime = DateTime.UtcNow,
+        };
+
+        return Ok(result);
+    }
+
+
+    [HttpPost("{id}/vote")]
+    public async Task<IActionResult> AddVote(int id, RequestVoteDto voteDto)
+    {
+        var question = await _unitOfWork.Questions.GetByIdAsync(id);
+
+        if (question is null) 
+            return NotFound();
+
+        var user = await _unitOfWork.Users.GetByIdAsync(voteDto.UserId);
+
+        if (user is null)
+            return NotFound();
+
+        var vote = new Vote 
+        { 
+            UserId = user.Id, 
+            Value = voteDto.VoteValue, 
+            EntityType = Domain.Enums.EntityType.Question, 
+            EntityId = question.Id 
+        };
+
+        await _unitOfWork.Votes.AddAsync(vote);
+
+        question.TotalVotes += vote.Value;
+
+        await _unitOfWork.CompleteAsync();
+
+        var result = new Result<ResponseVoteDto>
+        {
+            Content = new ResponseVoteDto { VoteTotal = question.TotalVotes },
+        };
+
+        return Ok(result);
     }
 }

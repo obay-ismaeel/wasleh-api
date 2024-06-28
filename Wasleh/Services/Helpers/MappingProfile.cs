@@ -11,5 +11,8 @@ public class MappingProfile : Profile
     {
         CreateMap<RequestQuestionDto, Question>();
         CreateMap<Question, ResponseQuestionDto>();
+        
+        CreateMap<Answer, ResponseAnswerDto>();
+        CreateMap<RequestAnswerDto, Answer>();
     }
 }
