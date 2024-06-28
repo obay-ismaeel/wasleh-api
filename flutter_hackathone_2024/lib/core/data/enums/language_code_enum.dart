@@ -1,1 +1,0 @@
-enum LanguageCodeEnum { ar, en }

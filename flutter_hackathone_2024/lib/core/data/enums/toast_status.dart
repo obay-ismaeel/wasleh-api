@@ -1,4 +1,0 @@
-enum ToastStatus {
-  success,
-  failure,
-}
