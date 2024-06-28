@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Wasleh.Domain.Abstractions;
 using Wasleh.Domain.Entities;
-using Wasleh.Dtos;
+using Wasleh.Dtos.Outgoing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Wasleh.Services;

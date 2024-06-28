@@ -1,5 +1,5 @@
 ﻿using Wasleh.Domain.Entities;
-using Wasleh.Dtos;
+using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Domain.Abstractions;
 

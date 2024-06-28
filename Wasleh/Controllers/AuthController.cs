@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Wasleh.Domain.Abstractions;
 using Wasleh.Dtos;
+using Wasleh.Dtos.Incoming;
+using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Controllers;
 
@@ -65,5 +67,11 @@ public class AuthController : BaseController
             ExpireDate = ExpireDate
         });
 
+    }
+
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(_unitOfWork.Users.GetAll());
     }
 }

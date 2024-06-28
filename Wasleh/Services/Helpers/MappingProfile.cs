@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Wasleh.Domain.Entities;
-using Wasleh.Dtos;
+using Wasleh.Dtos.Incoming;
+using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Services.Helpers;
 
@@ -8,6 +9,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<QuestionRequestDto, Question>();
+        CreateMap<RequestQuestionDto, Question>();
+        CreateMap<Question, ResponseQuestionDto>();
     }
 }

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Wasleh.Domain.Abstractions;
 using Wasleh.Domain.Entities;
-using Wasleh.Dtos;
+using Wasleh.Dtos.Generic;
+using Wasleh.Dtos.Incoming;
+using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Controllers;
 
@@ -13,9 +15,22 @@ public class QuestionsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(int pageNumber = 1, int pageSize = 10)
     {
-        return Ok(await _unitOfWork.Questions.GetAllAsync());
+        var content = (await _unitOfWork.Questions.Paginate(pageNumber, pageSize))
+            .Select(x => _mapper.Map<ResponseQuestionDto>(x))
+            .ToList();
+        
+        var result = new PageResult<ResponseQuestionDto>
+        {
+            Page = pageNumber,
+            ResultsPerPage = pageSize,
+            ResultCount = content.Count(),
+            TotalCount = await _unitOfWork.Questions.CountAsync(),
+            Content = content
+        };
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -30,9 +45,9 @@ public class QuestionsController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(QuestionRequestDto questionDto)
+    public async Task<IActionResult> Post(RequestQuestionDto questionDto)
     {
-        var user = await _unitOfWork.Questions.GetByIdAsync(questionDto.UserId);
+        var user = await _unitOfWork.Users.GetByIdAsync(questionDto.UserId);
 
         if (user is null)
         {
@@ -48,24 +63,20 @@ public class QuestionsController : BaseController
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, QuestionRequestDto questionDto)
+    public async Task<IActionResult> Put(int id, RequestQuestionDto questionDto)
     {
         if(id != questionDto.Id)
             return BadRequest("Ids don't match!");
 
-        var user = _unitOfWork.Questions.GetByIdAsync(questionDto.UserId);
+        var question = _unitOfWork.Questions.GetById(id);
 
-        if (user is null)
-            return BadRequest("No such user");
-
-        var item = _unitOfWork.Questions.GetById(id);
-
-        if (item is null)
+        if (question is null)
             return NotFound();
 
-        var questionToSave = _mapper.Map<Question>(questionDto);
+        question.Body = questionDto.Body;
+        question.Title = questionDto.Title;
 
-        _unitOfWork.Questions.Update(questionToSave);
+        _unitOfWork.Questions.Update(question);
         await _unitOfWork.CompleteAsync();
 
         return NoContent();
