@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Wasleh.Dtos;
+namespace Wasleh.Dtos.Incoming;
 
 public record UserRegisterRequestDto
 {

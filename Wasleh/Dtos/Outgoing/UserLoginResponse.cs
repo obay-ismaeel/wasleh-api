@@ -1,4 +1,4 @@
-﻿namespace Wasleh.Dtos;
+﻿namespace Wasleh.Dtos.Outgoing;
 
 public record UserLoginResponse
 {

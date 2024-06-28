@@ -1,6 +1,6 @@
 ﻿using Wasleh.Domain.Entities;
 
-namespace Wasleh.Dtos;
+namespace Wasleh.Dtos.Outgoing;
 
 public record UserManagerResponse
 {
