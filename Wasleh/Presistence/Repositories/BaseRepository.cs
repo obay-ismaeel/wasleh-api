@@ -87,4 +87,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         return await _context.Set<T>().CountAsync(criteria);
     }
+
+    public async Task<IEnumerable<T>> Paginate(int pageNumber = 1, int pageSize = 10)
+    {
+        return await _context.Set<T>()
+            .AsNoTracking()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
 }
