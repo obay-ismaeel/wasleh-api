@@ -5,7 +5,7 @@ namespace Wasleh.Domain.Abstractions;
 
 public interface IUserService
 {
-    Task<UserManagerResponse> RegisterUserAsync(string email, string userName, string password);
+    Task<UserManagerResponse> RegisterUserAsync(string email, string password);
     Task<UserManagerResponse> LoginUserUsingUserNameAsync(string userName, string password);
     Task<UserManagerResponse> LoginUserUsingEmailAsync(string email, string password);
     Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token);
