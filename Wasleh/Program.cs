@@ -25,6 +25,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 // Database connection config
 
@@ -84,15 +85,17 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 

@@ -27,7 +27,7 @@ public class QuestionsController : BaseController
             ResultsPerPage = pageSize,
             ResultCount = content.Count(),
             TotalCount = await _unitOfWork.Questions.CountAsync(),
-            Content = content
+            Data = content
         };
 
         return Ok(result);
@@ -107,7 +107,7 @@ public class QuestionsController : BaseController
         
         var result = new Result<List<ResponseAnswerDto>> 
         { 
-            Content = question.Answers.Select(x => _mapper.Map<ResponseAnswerDto>(x)).ToList(),
+            Data = question.Answers.Select(x => _mapper.Map<ResponseAnswerDto>(x)).ToList(),
             ResponseTime = DateTime.UtcNow,
         };
 
@@ -144,7 +144,7 @@ public class QuestionsController : BaseController
 
         var result = new Result<ResponseVoteDto>
         {
-            Content = new ResponseVoteDto { VoteTotal = question.TotalVotes },
+            Data = new ResponseVoteDto { VoteTotal = question.TotalVotes },
         };
 
         return Ok(result);

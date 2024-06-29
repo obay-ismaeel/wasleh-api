@@ -14,5 +14,8 @@ public class MappingProfile : Profile
         
         CreateMap<Answer, ResponseAnswerDto>();
         CreateMap<RequestAnswerDto, Answer>();
+
+        CreateMap<Lecture, ResponseLectureDto>();
+        CreateMap<RequestLectureDto, Lecture>();
     }
 }

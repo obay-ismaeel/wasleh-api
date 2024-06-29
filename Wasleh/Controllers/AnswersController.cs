@@ -27,7 +27,7 @@ public class AnswersController : BaseController
             ResultsPerPage = pageSize,
             ResultCount = content.Count(),
             TotalCount = await _unitOfWork.Answers.CountAsync(),
-            Content = content
+            Data = content
         };
 
         return Ok(result);
@@ -132,7 +132,7 @@ public class AnswersController : BaseController
 
         var result = new Result<ResponseVoteDto>
         {
-            Content = new ResponseVoteDto { VoteTotal = answer.TotalVotes },
+            Data = new ResponseVoteDto { VoteTotal = answer.TotalVotes },
         };
 
         return Ok(result);

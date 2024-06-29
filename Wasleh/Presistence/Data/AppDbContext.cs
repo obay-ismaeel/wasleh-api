@@ -10,6 +10,10 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Vote> Votes { get; set; }
+    public DbSet<Lecture> Lectures { get; set; }
+    public DbSet<Faculty> Faculties { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<University> Universities { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

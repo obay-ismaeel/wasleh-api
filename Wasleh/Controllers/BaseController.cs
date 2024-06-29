@@ -6,7 +6,7 @@ using Wasleh.Presistence.Data;
 namespace Wasleh.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BaseController : ControllerBase
 {
     protected readonly IUnitOfWork _unitOfWork;
