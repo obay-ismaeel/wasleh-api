@@ -88,12 +88,21 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return await _context.Set<T>().CountAsync(criteria);
     }
 
-    public async Task<IEnumerable<T>> Paginate(int pageNumber = 1, int pageSize = 10)
+    public async Task<IEnumerable<T>> Paginate(int pageNumber = 1, int pageSize = 10, string[] includes = null)
     {
-        return await _context.Set<T>()
-            .AsNoTracking()
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        IQueryable<T> query = _context.Set<T>();
+
+        if(includes is not null)
+        {
+            foreach(var include in includes)
+            {
+                query.Include(include);
+            }
+        }
+
+        query.Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        return await query.ToListAsync();
     }
 }

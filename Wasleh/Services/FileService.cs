@@ -5,6 +5,13 @@ namespace Wasleh.Services;
 
 public class FileService : IFileService
 {
+    private readonly IWebHostEnvironment _env;
+
+    public FileService(IWebHostEnvironment env)
+    {
+        _env = env;
+    }
+
     public async Task<string> StoreAsync(IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -16,7 +23,7 @@ public class FileService : IFileService
 
         var filePath = Path.Combine(FileSettings.ImagesPath, uniqueFileName);
 
-        var fullPath = Path.Combine(FileSettings.WebRootPath, filePath);
+        var fullPath = Path.Combine(_env.WebRootPath, filePath);
 
         using (var stream = new FileStream(fullPath, FileMode.Create))
         {

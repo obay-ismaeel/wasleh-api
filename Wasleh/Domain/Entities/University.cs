@@ -6,4 +6,5 @@ public class University : BaseEntity
     public string Description { get; set; }
     public string LogoPath { get; set; }
     public string Country { get; set; }
+    public ICollection<Faculty> Faculties { get; set; } = [];
 }

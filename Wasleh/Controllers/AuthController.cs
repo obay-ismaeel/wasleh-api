@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using Wasleh.Domain.Abstractions;
+using Wasleh.Domain.Entities;
 using Wasleh.Dtos;
 using Wasleh.Dtos.Incoming;
 using Wasleh.Dtos.Outgoing;
+using Wasleh.Presistence.Data;
 
 namespace Wasleh.Controllers;
 
@@ -18,7 +21,7 @@ public class AuthController : BaseController
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserRegisterRequestDto request)
+    public async Task<IActionResult> Register(RequestRegisterDto request)
     {
         var result = await _userService.RegisterUserAsync(
             request.Email,
@@ -44,7 +47,7 @@ public class AuthController : BaseController
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginEmail(UserLoginRequestDto request)
+    public async Task<IActionResult> LoginEmail(RequestLoginDto request)
     {
         var result = await _userService.LoginUserUsingEmailAsync(
             request.Email,
@@ -72,6 +75,30 @@ public class AuthController : BaseController
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
+        var uni = await _unitOfWork.Universities.AddAsync(new University
+        {
+            Description = "The best in the east",
+            Name ="Damascus University",
+            LogoPath ="hello",
+            Country ="Syria"
+        });
+        await _unitOfWork.CompleteAsync();
+
+        var fac = await _unitOfWork.Faculties.AddAsync(new Faculty 
+        {
+            Name = "Information Technology",
+            UniversityId = uni.Id,
+        });
+        await _unitOfWork.CompleteAsync();
+
+        await _unitOfWork.Courses.AddAsync(new Course
+        {
+            Name = "Virtual Reality",
+            FacultyId = fac.Id,
+            Description = "Contains bullshit"
+        });
+        await _unitOfWork.CompleteAsync();
+
         return Ok(_unitOfWork.Users.GetAll());
     }
 }

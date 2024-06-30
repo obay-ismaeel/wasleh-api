@@ -12,7 +12,7 @@ using Wasleh.Presistence.Data;
 namespace Wasleh.Presistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240628141119_InitialCreate")]
+    [Migration("20240629033632_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -193,6 +193,108 @@ namespace Wasleh.Presistence.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("Wasleh.Domain.Entities.Course", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacultyId");
+
+                    b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.Faculty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UniversityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UniversityId");
+
+                    b.ToTable("Faculties");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.Lecture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Provider")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Lectures");
+                });
+
             modelBuilder.Entity("Wasleh.Domain.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -224,6 +326,41 @@ namespace Wasleh.Presistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.University", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Universities");
                 });
 
             modelBuilder.Entity("Wasleh.Domain.Entities.User", b =>
@@ -397,6 +534,47 @@ namespace Wasleh.Presistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Wasleh.Domain.Entities.Course", b =>
+                {
+                    b.HasOne("Wasleh.Domain.Entities.Faculty", "Faculty")
+                        .WithMany("Courses")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.Faculty", b =>
+                {
+                    b.HasOne("Wasleh.Domain.Entities.University", "University")
+                        .WithMany("Faculties")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("University");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.Lecture", b =>
+                {
+                    b.HasOne("Wasleh.Domain.Entities.Course", "Course")
+                        .WithMany("lectures")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wasleh.Domain.Entities.User", "User")
+                        .WithMany("Lectures")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Wasleh.Domain.Entities.Question", b =>
                 {
                     b.HasOne("Wasleh.Domain.Entities.User", "User")
@@ -419,14 +597,31 @@ namespace Wasleh.Presistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Wasleh.Domain.Entities.Course", b =>
+                {
+                    b.Navigation("lectures");
+                });
+
+            modelBuilder.Entity("Wasleh.Domain.Entities.Faculty", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
             modelBuilder.Entity("Wasleh.Domain.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
                 });
 
+            modelBuilder.Entity("Wasleh.Domain.Entities.University", b =>
+                {
+                    b.Navigation("Faculties");
+                });
+
             modelBuilder.Entity("Wasleh.Domain.Entities.User", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("Lectures");
 
                     b.Navigation("Questions");
 

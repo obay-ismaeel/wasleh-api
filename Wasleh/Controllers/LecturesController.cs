@@ -19,7 +19,7 @@ public class LecturesController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(int pageNumber = 1, int pageSize = 10)
     {
-        var lectures = (await _unitOfWork.Lectures.Paginate(pageNumber, pageSize))
+        var lectures = (await _unitOfWork.Lectures.Paginate(pageNumber, pageSize, ["User"]))
             .Select(x => _mapper.Map<ResponseLectureDto>(x))
             .ToList();
 

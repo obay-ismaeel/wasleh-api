@@ -17,7 +17,8 @@ public class QuestionsController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(int pageNumber = 1, int pageSize = 10)
     {
-        var content = (await _unitOfWork.Questions.Paginate(pageNumber, pageSize))
+        var list = await _unitOfWork.Questions.Paginate(pageNumber, pageSize, ["User"]);
+        var content = list
             .Select(x => _mapper.Map<ResponseQuestionDto>(x))
             .ToList();
         
@@ -30,18 +31,20 @@ public class QuestionsController : BaseController
             Data = content
         };
 
-        return Ok(result);
+        return Ok(new GenericResult<ResponseQuestionDto> { Data = result });
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var item = await _unitOfWork.Questions.GetByIdAsync(id);
+        var question = await _unitOfWork.Questions.GetByIdAsync(id);
 
-        if (item is null)
+        if (question is null)
             return NotFound();
 
-        return Ok(item);
+        var result = new Result<ResponseQuestionDto> { Data = _mapper.Map<ResponseQuestionDto>(question) };
+
+        return Ok(result);
     }
 
     [HttpPost]
