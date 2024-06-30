@@ -31,7 +31,7 @@ public class QuestionsController : BaseController
             Data = content
         };
 
-        return Ok(new GenericResult<ResponseQuestionDto> { Data = result });
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
