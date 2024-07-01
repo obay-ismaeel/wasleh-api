@@ -26,5 +26,8 @@ public class MappingProfile : Profile
 
         CreateMap<RequestFacultyDto, Faculty>();
         CreateMap<Faculty, ResponseFacultyDto>();
+
+        CreateMap<RequestReplyDto, Reply>();
+        CreateMap<Reply, ResponseReplyDto>();
     }
 }
