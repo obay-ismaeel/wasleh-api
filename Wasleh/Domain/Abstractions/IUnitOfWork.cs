@@ -7,6 +7,7 @@ public interface IUnitOfWork
     IBaseRepository<User> Users { get; }
     IBaseRepository<Question> Questions { get; }
     IBaseRepository<Answer> Answers { get; }
+    IBaseRepository<Reply> Replies { get; }
     IBaseRepository<Vote> Votes { get; }
     IBaseRepository<Lecture> Lectures { get; }
     IBaseRepository<Course> Courses{ get; }
