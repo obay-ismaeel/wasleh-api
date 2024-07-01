@@ -1,6 +1,6 @@
 ﻿namespace Wasleh.Dtos.Outgoing;
 
-public class ResponseUniversityDto
+public record ResponseUniversityDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }

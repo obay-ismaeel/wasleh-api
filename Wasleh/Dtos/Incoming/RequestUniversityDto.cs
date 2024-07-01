@@ -1,6 +1,6 @@
 ﻿namespace Wasleh.Dtos.Incoming;
 
-public class RequestUniversityDto
+public record RequestUniversityDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }

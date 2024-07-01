@@ -7,8 +7,6 @@ using Wasleh.Dtos.Incoming;
 using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Controllers;
-[ApiController]
-[Route("api/[controller]")]
 public class UniversitiesController : BaseController
 {
     private readonly IFileService _fileService;
@@ -70,13 +68,13 @@ public class UniversitiesController : BaseController
     {
         if (id != universityDto.Id)
         {
-            return BadRequest();
+            return BadRequest("Ids don't match");
         }
 
         var university = await _unitOfWork.Universities.GetByIdAsync(id);
         if (university is null)
         {
-            return NotFound();
+            return NotFound("No such university");
         }
 
         if (universityDto.LogoFile is not null)
@@ -97,7 +95,7 @@ public class UniversitiesController : BaseController
     {
         var university = await _unitOfWork.Universities.GetByIdAsync(id);
         
-        if (university == null)
+        if (university is null)
         {
             return NotFound();
         }

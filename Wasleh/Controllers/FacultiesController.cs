@@ -8,8 +8,6 @@ using Wasleh.Dtos.Outgoing;
 
 namespace Wasleh.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class FacultiesController : BaseController
 {
     public FacultiesController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
