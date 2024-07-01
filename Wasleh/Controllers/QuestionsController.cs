@@ -17,7 +17,7 @@ public class QuestionsController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(int pageNumber = 1, int pageSize = 10)
     {
-        var list = await _unitOfWork.Questions.Paginate(pageNumber, pageSize, ["User"]);
+        var list = await _unitOfWork.Questions.Paginate(pageNumber, pageSize);
         var content = list
             .Select(x => _mapper.Map<ResponseQuestionDto>(x))
             .ToList();

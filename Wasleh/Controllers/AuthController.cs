@@ -75,30 +75,6 @@ public class AuthController : BaseController
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
-        var uni = await _unitOfWork.Universities.AddAsync(new University
-        {
-            Description = "The best in the east",
-            Name ="Damascus University",
-            LogoPath ="hello",
-            Country ="Syria"
-        });
-        await _unitOfWork.CompleteAsync();
-
-        var fac = await _unitOfWork.Faculties.AddAsync(new Faculty 
-        {
-            Name = "Information Technology",
-            UniversityId = uni.Id,
-        });
-        await _unitOfWork.CompleteAsync();
-
-        await _unitOfWork.Courses.AddAsync(new Course
-        {
-            Name = "Virtual Reality",
-            FacultyId = fac.Id,
-            Description = "Contains bullshit"
-        });
-        await _unitOfWork.CompleteAsync();
-
         return Ok(_unitOfWork.Users.GetAll());
     }
 }

@@ -17,7 +17,7 @@ public class AnswersController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(int pageNumber = 1, int pageSize = 10)
     {
-        var content = (await _unitOfWork.Answers.Paginate(pageNumber, pageSize, ["User"]))
+        var content = (await _unitOfWork.Answers.Paginate(pageNumber, pageSize))
             .Select(x => _mapper.Map<ResponseAnswerDto>(x))
             .ToList();
 
@@ -39,7 +39,9 @@ public class AnswersController : BaseController
         var answer = await _unitOfWork.Answers.GetByIdAsync(id);
 
         if (answer is null)
+        {
             return NotFound();
+        }
 
         var result = new Result<ResponseAnswerDto> { Data = _mapper.Map<ResponseAnswerDto>(answer) };
 
@@ -60,7 +62,7 @@ public class AnswersController : BaseController
 
         if (question is null)
         {
-            return BadRequest("No such question");
+            return BadRequest("No such answer");
         }
 
         answerDto.Id = 0;
@@ -75,17 +77,20 @@ public class AnswersController : BaseController
     public async Task<IActionResult> Put(int id, RequestAnswerDto answerDto)
     {
         if (id != answerDto.Id)
+        {
             return BadRequest("Ids don't match!");
+        }
 
         var answer = _unitOfWork.Answers.GetById(id);
 
         if (answer is null)
+        {
             return NotFound();
+        }
 
         answer.Body = answerDto.Body;
         answer.UpdatedAt = DateTime.UtcNow;
 
-        _unitOfWork.Answers.Update(answer);
         await _unitOfWork.CompleteAsync();
 
         return NoContent();
