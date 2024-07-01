@@ -36,12 +36,14 @@ public class AnswersController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var item = await _unitOfWork.Answers.GetByIdAsync(id);
+        var answer = await _unitOfWork.Answers.GetByIdAsync(id);
 
-        if (item is null)
+        if (answer is null)
             return NotFound();
 
-        return Ok(item);
+        var result = new Result<ResponseAnswerDto> { Data = _mapper.Map<ResponseAnswerDto>(answer) };
+
+        return Ok(result);
     }
 
     [HttpPost]
