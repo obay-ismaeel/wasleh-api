@@ -2,11 +2,12 @@
 using Wasleh.Domain.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Wasleh.Dtos.Generic;
+using Wasleh.Dtos.Outgoing;
+using Wasleh.Dtos.Incoming;
 
 namespace Wasleh.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class CoursesController : BaseController
 {
     public CoursesController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
@@ -14,47 +15,81 @@ public class CoursesController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
     {
-        var courses = await _unitOfWork.Courses.GetAllAsync();
-        return Ok(courses);
+        var data = (await _unitOfWork.Courses.Paginate(pageNumber, pageSize))
+            .Select(x => _mapper.Map<ResponseCourseDto>(x))
+            .ToList();
+
+        var result = new PageResult<ResponseCourseDto>
+        {
+            Data = data,
+            Page = pageNumber,
+            ResultsPerPage = pageSize,
+            ResultCount = data.Count,
+            TotalCount = await _unitOfWork.Courses.CountAsync()
+        };
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
         var course = await _unitOfWork.Courses.GetByIdAsync(id);
+
         if (course == null)
         {
             return NotFound();
         }
+
+        var result = new Result<ResponseCourseDto> 
+        { 
+            Data = _mapper.Map<ResponseCourseDto>(course) 
+        };
+
         return Ok(course);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Course course)
+    public async Task<IActionResult> Post(RequestCourseDto courseDto)
     {
+        var faculty = await _unitOfWork.Faculties.GetByIdAsync(courseDto.FacultyId);
+        if(faculty is null)
+        {
+            return BadRequest("No such faculty");
+        }
+
+        courseDto.Id = 0;
+        var course = _mapper.Map<Course>(courseDto);
+        
         await _unitOfWork.Courses.AddAsync(course);
         await _unitOfWork.CompleteAsync();
 
-        return CreatedAtAction(nameof(Get), new { id = course.Id }, course);
+        return CreatedAtAction(nameof(Get), new { id = course.Id }, _mapper.Map<ResponseCourseDto>(course) );
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, Course course)
+    public async Task<IActionResult> Put(int id, RequestCourseDto courseDto)
     {
-        if (id != course.Id)
+        if (id != courseDto.Id)
         {
-            return BadRequest();
+            return BadRequest("Ids don't match");
         }
 
-        var existingCourse = await _unitOfWork.Courses.GetByIdAsync(id);
-        if (existingCourse == null)
+        var faculty = await _unitOfWork.Faculties.GetByIdAsync(courseDto.FacultyId);
+        if(faculty is null)
+        {
+            return BadRequest("No such faculty");
+        }
+
+        var course = await _unitOfWork.Courses.GetByIdAsync(id);
+        if (course is null)
         {
             return NotFound();
         }
 
-        _mapper.Map(course, existingCourse);
+        _mapper.Map(courseDto, course);
         await _unitOfWork.CompleteAsync();
 
         return NoContent();

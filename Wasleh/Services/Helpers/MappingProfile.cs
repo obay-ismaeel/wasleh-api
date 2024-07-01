@@ -12,10 +12,19 @@ public class MappingProfile : Profile
         CreateMap<RequestQuestionDto, Question>();
         CreateMap<Question, ResponseQuestionDto>();
         
-        CreateMap<Answer, ResponseAnswerDto>();
         CreateMap<RequestAnswerDto, Answer>();
+        CreateMap<Answer, ResponseAnswerDto>();
 
-        CreateMap<Lecture, ResponseLectureDto>();
         CreateMap<RequestLectureDto, Lecture>();
+        CreateMap<Lecture, ResponseLectureDto>();
+
+        CreateMap<RequestUniversityDto, University>();
+        CreateMap<University, ResponseUniversityDto>();
+
+        CreateMap<RequestCourseDto, Course>();
+        CreateMap<Course, ResponseCourseDto>();
+
+        CreateMap<RequestFacultyDto, Faculty>();
+        CreateMap<Faculty, ResponseFacultyDto>();
     }
 }
