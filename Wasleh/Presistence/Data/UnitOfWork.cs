@@ -10,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
     public IBaseRepository<User> Users { get; private set; }
     public IBaseRepository<Question> Questions { get; private set; }
     public IBaseRepository<Answer> Answers { get; private set; }
+    public IBaseRepository<Reply> Replies{ get; private set; }
     public IBaseRepository<Vote> Votes { get; private set; }
     public IBaseRepository<Lecture> Lectures { get; private set; }
     public IBaseRepository<Course> Courses { get; private set; }
@@ -27,6 +28,7 @@ public class UnitOfWork : IUnitOfWork
         Courses = new BaseRepository<Course>(context);
         Faculties = new BaseRepository<Faculty>(context);
         Universities = new BaseRepository<University>(context);
+        Replies = new BaseRepository<Reply>(context);
     }
 
     public async Task<int> CompleteAsync()
